@@ -1,22 +1,44 @@
 var Word = require("./word.js");
 var inquirer = require("inquirer")
 
-var wordArray = ["cat", "dog", "beaver", "duck"];
-var randomWord = ""
-function createRandomWord(){
-    var r = parseInt(Math.floor(Math.random() * (wordArray.length)))
-    randomWord = wordArray[r]
-}
-createRandomWord()
-
-var finalWerd = new Word(randomWord)
-
+var wordArray = ["cat", "dog", "beaver", "duck", "sloth", "catipiller", "heron", "dingo", "tapir", "moose", "skink"];
+var randomWord = "";
+var displayWerd = "";
+var finalWerd;
+var leftToGuess;
 var lives = 4
 
+function newGame() {
+    randomWord = "";
+    var r = parseInt(Math.floor(Math.random() * (wordArray.length)))
+    randomWord = wordArray[r]
+    finalWerd = new Word(randomWord)
+    leftToGuess = finalWerd.letterArr.length
+}
+
+function gameOver() {
+    {
+        console.log("Game over.")
+        inquirer.prompt([{
+            type: "confirm",
+            name: "playAgain",
+            message: "Would you like to play again?"
+        }]).then(function (response) {
+            if (response.playAgain) {
+                newGame()
+                print()
+                askToGuess();
+            } else {
+                console.log("Ok, see you around!")
+            }
+        })
+    }
+}
 
 function displayWord() {
-    var displayWerd = finalWerd.createWerdString()
-   console.log(displayWerd);
+    displayWerd = finalWerd.createWerdString()
+    console.log(displayWerd);
+    finalWerd.compare = displayWerd
 }
 
 
@@ -29,41 +51,43 @@ function askToGuess() {
         if (lives > 0) {
             if (input.length === 1) {
                 finalWerd.guessCheck(input)
-                
-                if(finalWerd.createWerdString().includes("_")){
+                displayWerd = finalWerd.createWerdString()
+
+                if (finalWerd.compare === displayWerd) {
+                    console.log("Nope, there is no", input, "in the word")
+                    lives--
                     console.log("You have", lives, "guesses remaining.")
+                    if (lives === 0) {
+                        gameOver()
+                    }
                     print()
-                }
-                else {
-                    print();
-                    console.log("Great Job! Here's the next word:");
-                    createRandomWord();
-                    print();
                     askToGuess()
+                } else {
+                    console.log("Good choce!")
+                    leftToGuess--
+                    print();
+                    if (leftToGuess === 0) {
+
+                        console.log("Great Job! Here's the next word:");
+                        newGame()
+                        print();
+                        askToGuess();
+                    } else {
+                        askToGuess()
+                    }
                 }
-               
+
+            } else if (input.length === 0) {
+                consoel.log("Please choose a letter.");
+                askToGuess()
             } else {
                 console.log("Pick one letter a a time please.")
                 askToGuess()
             }
-        } else if( input.length === 0) {
-            consoel.log("Please choose a letter.");
-            askToGuess()
-        }
-        
-        else {
-            console.log("Game over.")
-            inquirer.prompt([{
-                type: "confirm",
-                name: "playAgain",
-                message: "Would you like to play again?"
-            }]).then(function (response) {
-                if (response.playAgain) {
-                    print()
-                } else {
-                    console.log("Ok, see you around!")
-                }
-            })
+
+
+        } else {
+            gameOver()
         }
     })
 }
@@ -72,9 +96,13 @@ function print() {
     console.log("\n")
     console.log("******************************************")
     displayWord()
+    // finalWerd.correct()
     console.log("\n*****************************************")
     console.log("\n")
-    askToGuess();
 }
-
+newGame()
 print()
+console.log(finalWerd)
+console.log(leftToGuess)
+// console.log(finalWerd.letterArr)
+askToGuess();
