@@ -1,12 +1,12 @@
 var Word = require("./word.js");
 var inquirer = require("inquirer")
 
-var wordArray = ["cat", "dog", "beaver", "duck", "sloth", "catipiller", "heron", "dingo", "tapir", "moose", "skink"];
+var wordArray = ["cat", "dog", "beaver", "duck", "sloth", "ladybug", "stork", "dingo", "tapir", "moose", "skink", "goose", "marmoset", "dolphin", ];
 var randomWord = "";
 var displayWerd = "";
 var finalWerd;
 var leftToGuess;
-var lives = 4
+var lives = 6
 
 function newGame() {
     randomWord = "";
@@ -56,12 +56,14 @@ function askToGuess() {
                 if (finalWerd.compare === displayWerd) {
                     console.log("Nope, there is no", input, "in the word")
                     lives--
-                    console.log("You have", lives, "guesses remaining.")
+                    console.log("You have", lives, "guesse(s) remaining.")
                     if (lives === 0) {
                         gameOver()
+                    } else {
+                        print()
+                        askToGuess()
                     }
-                    print()
-                    askToGuess()
+                   
                 } else {
                     console.log("Good choce!")
                     leftToGuess--
@@ -96,13 +98,9 @@ function print() {
     console.log("\n")
     console.log("******************************************")
     displayWord()
-    // finalWerd.correct()
     console.log("\n*****************************************")
     console.log("\n")
 }
 newGame()
 print()
-console.log(finalWerd)
-console.log(leftToGuess)
-// console.log(finalWerd.letterArr)
 askToGuess();
