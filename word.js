@@ -1,17 +1,26 @@
 var Letter = require("./letter.js")
-// var newWord = ["f", "o", "x"]
 
-function Word(wordAdd) {
-    this.wordAdd = wordAdd;
+
+function Word(werd) {
     this.letterArr = [];
-    this.displayWord = ""
-    this.addLetter = function (werd) {
-        for(var i = 0; i < werd.length; i++){
-            this.letterArr.push(new Letter(werd[i]))          
-        }
-        console.log(this.displayWord)
+    this.werd = werd;
+    for (var i = 0; i < werd.length; i++) {
+        this.letterArr.push(new Letter(werd[i]))
     }
+    this.createWerdString = function () {
+        var finalWerdString = "";
+        for (var j = 0; j < this.letterArr.length; j++) {
+            finalWerdString += this.letterArr[j].returnChar() + " "
+        }
+        return finalWerdString
+
+    }
+    this.guessCheck = function(userInput){
+        for (var x = 0; x < this.letterArr.length; x++){
+            this.letterArr[x].guessCheck(userInput)
+        }
+
+    } 
 }
 
 module.exports = Word;
-
